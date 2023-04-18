@@ -1,0 +1,22 @@
+schemaVersion: v1alpha1
+server:
+  http:
+    port: 8080
+    tls:
+      enabled: false
+      port: 8443
+
+auth:
+  - method: /v1alpha1/auth/hello
+    jwt:
+      subjects:
+        - type: user
+  - method: /v1alpha1/authandrole/hello
+    jwt:
+      subjects:
+        - type: user
+      roles:
+        - operations-support
+      audience: project-seamless
+
+

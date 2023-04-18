@@ -1,0 +1,109 @@
+consumes:
+  - application/json
+info:
+  contact:
+    email: trex@cambiahealth.com
+    name: Team Rex
+  description:    >
+    The `prime-integration-service` exposes several GraphQL endpoints that return data from Prime's FHIR APIs.
+    The service's GraphQl endpoint is federated and documented through the Digital First Information Service [(DFIS)](https://digital-first-information-service.dev.janusplatform.io/graphql).
+    The service also exposes a number of basic REST endpoints to validate health, env, etc. These can be found below.
+  title: Prime Integration Service
+  version: 0.0.1
+tags:
+  - name: "janus"
+    description: "Required janus endpoints"
+  - name: "Coverage Eligibility Request"
+    description: "Prime API Pharmacy Coverage endpoints"
+paths:
+  /docs:
+    get:
+      summary: Documentation
+      description: Serves the Swagger UI
+      parameters: [ ]
+      responses:
+        '200':
+          description: Docs rendered OK
+      tags:
+        - "janus"
+  /env:
+    get:
+      summary: List environment variables
+      description: Returns the list of environment variables on the platform
+      parameters: [ ]
+      responses:
+        '200':
+          description: Returns the list of environment variables
+      tags:
+        - "janus"
+  /health:
+    get:
+      operationId: healthCheckHandler
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: " Healthy "
+        "404":
+          description: " Returned when asset is not found."
+      tags:
+        - "janus"
+  /graphql:
+    post:
+      tags:
+        - Coverage Eligibility Request
+      summary: Run graphql query
+      description:    >
+        **This section is for informational purposes only and is not intended to be interactive (i.e. the 'Try It Out' button below doesn't work).**
+
+        - The following resources are available from the `prime-integration-service` by querying the GraphQl endpoint:
+
+        -  Eligibility information for insurance coverage including InForce status and tier description. Required arguments for the query are the `patientId` and the National Drug Code aka `ndc`.
+
+        - The following is a sample GraphQl query for eligibility:
+
+              {
+              cer(firstName: "SHARLA", lastName: "LOWN", memberId: "194210938" , dateOfBirth: "1954-12-29" , ndc: "00071-0155-23") {
+                  inForce
+                  excluded
+                  tierDescription
+                  insuranceItemName
+                }
+              }
+
+        
+        You can test this query here: [https://digital-first-information-service.dev.janusplatform.io/graphql](https://digital-first-information-service.dev.janusplatform.io/graphql).
+
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: GraphQL query
+          required: true
+          schema:
+            $ref: "#/definitions/GraphQLQuery"
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: "#/definitions/GraphQLResponse"
+definitions:
+  GraphQLQuery:
+    type: object
+    properties:
+      query:
+        type: string
+  GraphQLResponse:
+    type: object
+    properties:
+      data:
+        type: object
+produces:
+  - application/json
+schemes:
+  - http
+  - https
+swagger: "2.0"
