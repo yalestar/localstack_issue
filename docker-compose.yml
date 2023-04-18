@@ -7,9 +7,9 @@ services:
       context: .
       args:
         - GITHUB_TOKEN=${GITHUB_TOKEN}
-      dockerfile: Dockerfile.localhost
+      dockerfile: Dockerfile
     volumes:
-      - ./cmd:/app/cmd
+      - .:/app
     depends_on:
       localstack:
         condition: service_healthy
@@ -32,7 +32,7 @@ services:
       - "4566:4566"
       - "4569:4569"
     environment:
-      - SERVICES=dynamodb,secretsmanager
+      - SERVICES=dynamodb
       - DEFAULT_REGION=us-west-2
       - DEBUG=true
       - HOSTNAME=janus-localstack

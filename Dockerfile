@@ -20,12 +20,8 @@ COPY . .
 
 RUN go mod download
 
-RUN make docs-in-container
 
-# build the source
-RUN GOARCH=amd64 CGO_ENABLED=0 GOOS=linux go build \
-	-ldflags='-X github.com/cambiahealth/prime-integration-service/config.buildVersion='"${JANUS_STACK_VERSION}"' -X github.com/cambiahealth/prime-integration-service/config.buildServiceName='"${JANUS_STACK_NAME}"'' \
-	-o bin/service ./cmd/...
+RUN GOARCH=amd64 CGO_ENABLED=0 GOOS=linux go build -o bin/service .
 
 FROM alpine@sha256:124c7d2707904eea7431fffe91522a01e5a861a624ee31d03372cc1d138a3126
 
